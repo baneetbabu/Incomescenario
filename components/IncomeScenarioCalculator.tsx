@@ -3,6 +3,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 import { Slider } from '@/components/ui/slider';
 import { Button } from '@/components/ui/button';
 import { Share2 } from 'lucide-react';
+import { TooltipProps } from 'recharts';
 
 // Configuration
 const DEFAULT_CONFIG = {
@@ -57,34 +58,22 @@ const encodeScenario = (params: { variableExpenses: number; childcareCost: numbe
 const decodeScenario = (encoded: string) => {
   try {
     return JSON.parse(atob(encoded));
-  } catch (e) {
+  } catch (_) {  // Using underscore to explicitly ignore
     return null;
   }
 };
 
 // Tooltip Component
-import { TooltipProps } from 'recharts';
 
-interface CustomTooltipProps {
-  active?: boolean;
-  payload?: {
-    color: string;
-    name: string;
-    value: number;
-    dataKey: string;
-  }[];
-  label?: number;
-}
-
-function CustomTooltip({ active, payload, label }: CustomTooltipProps): React.JSX.Element | null {
+function CustomTooltip({ active, payload, label }: TooltipProps<number, string>): React.JSX.Element | null {
   if (!active || !payload || !payload.length || label === undefined) return null;
 
   return (
     <div className="bg-white p-4 border border-gray-200 rounded shadow">
       <p className="font-bold mb-2">Monthly Housing Cost: {formatCurrency(label)}</p>
-      {payload.map((entry) => (
-        <p key={entry.dataKey} style={{ color: entry.color }} className="text-sm">
-          {entry.name}: {formatCurrency(entry.value)}
+      {payload.map((entry, index) => (
+        <p key={index} style={{ color: entry.color }} className="text-sm">
+          {entry.name}: {formatCurrency(entry.value as number)}
         </p>
       ))}
     </div>
