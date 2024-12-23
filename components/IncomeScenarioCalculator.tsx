@@ -63,14 +63,27 @@ const decodeScenario = (encoded: string) => {
 };
 
 // Tooltip Component
-function CustomTooltip({ active, payload, label }): React.JSX.Element | null {
+import { TooltipProps } from 'recharts';
+
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: {
+    color: string;
+    name: string;
+    value: number;
+    dataKey: string;
+  }[];
+  label?: number;
+}
+
+function CustomTooltip({ active, payload, label }: CustomTooltipProps): React.JSX.Element | null {
   if (!active || !payload || !payload.length || label === undefined) return null;
 
   return (
     <div className="bg-white p-4 border border-gray-200 rounded shadow">
       <p className="font-bold mb-2">Monthly Housing Cost: {formatCurrency(label)}</p>
-      {payload.map((entry: { color: any; name: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined; value: number | bigint; }, index: React.Key | null | undefined) => (
-        <p key={index} style={{ color: entry.color }} className="text-sm">
+      {payload.map((entry) => (
+        <p key={entry.dataKey} style={{ color: entry.color }} className="text-sm">
           {entry.name}: {formatCurrency(entry.value)}
         </p>
       ))}
