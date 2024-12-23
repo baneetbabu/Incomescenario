@@ -58,7 +58,7 @@ const encodeScenario = (params: { variableExpenses: number; childcareCost: numbe
 const decodeScenario = (encoded: string) => {
   try {
     return JSON.parse(atob(encoded));
-  } catch (_) {  // Using underscore to explicitly ignore
+  } catch {  // Using underscore to explicitly ignore
     return null;
   }
 };
