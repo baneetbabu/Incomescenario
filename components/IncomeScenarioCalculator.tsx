@@ -34,7 +34,7 @@ const DEFAULT_CONFIG = {
 };
 
 // Utility functions
-const formatCurrency = (value) => {
+const formatCurrency = (value: number | bigint) => {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -43,18 +43,18 @@ const formatCurrency = (value) => {
   }).format(value);
 };
 
-const calculateRequiredIncome = (monthlyExpenses, savingsRate, taxRate) => {
+const calculateRequiredIncome = (monthlyExpenses: number, savingsRate: number, taxRate: number) => {
   const annualExpenses = monthlyExpenses * 12;
   const afterSavingsNeeded = annualExpenses / (1 - savingsRate);
   const totalNeeded = afterSavingsNeeded / (1 - taxRate);
   return totalNeeded;
 };
 
-const encodeScenario = (params) => {
+const encodeScenario = (params: { variableExpenses: number; childcareCost: number; savingsRate: number; taxRate: number; }) => {
   return btoa(JSON.stringify(params));
 };
 
-const decodeScenario = (encoded) => {
+const decodeScenario = (encoded: string) => {
   try {
     return JSON.parse(atob(encoded));
   } catch (e) {
@@ -63,20 +63,20 @@ const decodeScenario = (encoded) => {
 };
 
 // Tooltip Component
-const CustomTooltip = ({ active, payload, label }) => {
+function CustomTooltip({ active, payload, label }): React.JSX.Element | null {
   if (!active || !payload || !payload.length || label === undefined) return null;
-  
+
   return (
     <div className="bg-white p-4 border border-gray-200 rounded shadow">
       <p className="font-bold mb-2">Monthly Housing Cost: {formatCurrency(label)}</p>
-      {payload.map((entry, index) => (
+      {payload.map((entry: { color: any; name: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined; value: number | bigint; }, index: React.Key | null | undefined) => (
         <p key={index} style={{ color: entry.color }} className="text-sm">
           {entry.name}: {formatCurrency(entry.value)}
         </p>
       ))}
     </div>
   );
-};
+}
 
 // Main Component
 const IncomeScenarioCalculator = () => {
